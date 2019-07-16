@@ -1,4 +1,4 @@
-function [Y, left_boundary, right_boundary] = output_spot(X, slp, outpitch, T)
+function [Y, left_boundary, right_boundary] = output_spot(X, slp, T)
 
 if length(T)<10
     T = ones(size(X));
@@ -7,8 +7,18 @@ T = T/length(T);
 
 slp = round(slp);
 
-leftside = -outpitch;
-rightside = outpitch+slp;
+max_value = max(X);
+min_value = min(X);
+
+leftside = 0;
+rightside = slp;
+
+for i=1:20
+    if max_value > rightside || min_value < leftside
+        leftside = leftside - 500;
+        rightside = rightside + 500;
+    end
+end
 
 Y=zeros((rightside-leftside)*10+1,2);
 Y(:,1) = [leftside:0.1:rightside]';
